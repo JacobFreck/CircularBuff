@@ -6,52 +6,9 @@ using Xunit.Abstractions;
 
 namespace CircularBuffer.Tests;
 
-public class CircularBufferTests
+public class AddTests : TestBase
 {
-    ITestOutputHelper Logger { get; init; }
-
-    public CircularBufferTests(ITestOutputHelper testOutputHelper)
-    {
-        Logger = testOutputHelper;
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(int.MinValue)]
-    public void InvalidSizeBuffer_ThrowsArgumentException(int size)
-    {
-        Assert.Throws<ArgumentException>(() => new CircularBuffer<int>(size));
-    }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(3)]
-    [InlineData(5)]
-    public void AddItem_Success(int size)
-    {
-        CircularBuffer<int> buffer = new(size);
-        buffer.Add(0);
-        Assert.Single(buffer);
-    }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(3)]
-    [InlineData(5)]
-    public void RemoveItem_Success(int size)
-    {
-        CircularBuffer<int> buffer = new(size);
-
-        buffer.Add(0);
-        buffer.Remove();
-
-        foreach (int item in buffer)
-            Console.WriteLine($"item {item}");
-
-        Assert.Empty(buffer);
-    }
-
+    public AddTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 
     [Theory]
     [InlineData(1)]
@@ -81,7 +38,7 @@ public class CircularBufferTests
     {
         CircularBuffer<int> buffer = new(size);
 
-        foreach (int i in Enumerable.Range(0, size+1))
+        foreach (int i in Enumerable.Range(0, size + 1))
             buffer.Add(i);
 
         foreach ((int value, int index) in buffer.Select((int i, int index) => (i, index)))
@@ -94,7 +51,29 @@ public class CircularBufferTests
             Logger.WriteLine($"value={value}, index={index}");
         }
 
-        // TODO: assert values
         Assert.Equal(size, buffer.Count);
     }
+
+
+    [Fact]
+    public void ZeroAdd_ReturnsExpectedValue()
+    {
+        CircularBuffer<int> buffer = new(1);
+        Assert.Equal(0, buffer.Count);
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(5)]
+    public void Count_ReturnsExpectedValue(int size)
+    {
+        CircularBuffer<int> buffer = new(size);
+
+        if (size > 0)
+            Enumerable.Range(0, size).ToList().ForEach(buffer.Add);
+
+        Assert.Equal(buffer.Count, size);
+    }
 }
+
