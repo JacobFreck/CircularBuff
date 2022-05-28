@@ -94,7 +94,6 @@ public class CircularBufferTests
             Logger.WriteLine($"value={value}, index={index}");
         }
 
-        // TODO: assert values
         Assert.Equal(size, buffer.Count);
     }
 }

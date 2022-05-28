@@ -52,6 +52,8 @@ public class CircularBuffer<T> : IEnumerable, IEnumerable<T>
 
     public void CopyTo(T[] array, int arrayIndex)
     {
+        _ = array ?? throw new ArgumentNullException(nameof(array));
+
         if ((array != null) && (array.Rank != 1))
         {
             throw new ArgumentException("Multi-dimensional arrays not supported");
@@ -59,7 +61,6 @@ public class CircularBuffer<T> : IEnumerable, IEnumerable<T>
 
         try
         {
-            // Array.Copy will check for NULL.
             Array.Copy(_arr, 0, array, arrayIndex, _size);
         }
         catch (ArrayTypeMismatchException ex)
