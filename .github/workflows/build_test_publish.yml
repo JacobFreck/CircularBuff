@@ -48,7 +48,7 @@ jobs:
 
     - name: Pack
       # if: startsWith(github.ref, 'refs/heads/release')
-      run: dotnet pack --no-build
+      run: dotnet pack src/ --no-build
 
     - name: Publish
       if: startsWith(github.ref, 'refs/heads/release')
