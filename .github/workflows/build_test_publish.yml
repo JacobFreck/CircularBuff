@@ -46,6 +46,10 @@ jobs:
     - name: Run tests
       run: dotnet test src/ /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
 
+    - name: Pack
+      # if: startsWith(github.ref, 'refs/heads/release')
+      run: nuget pack --no-build
+
     - name: Publish
       if: startsWith(github.ref, 'refs/heads/release')
       run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
