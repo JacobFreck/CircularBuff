@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILD_CONFIG: 'Release'
-      SOLUTION: 'CircularBuffer.sln'
+      SOLUTION: 'CircularBuff.sln'
 
     steps:
     - uses: actions/checkout@v2
