@@ -21,6 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CircularBuffer\CircularBuffer.csproj" />
+    <ProjectReference Include="..\CircularBuffer\CircularBuff.csproj" />
   </ItemGroup>
 </Project>

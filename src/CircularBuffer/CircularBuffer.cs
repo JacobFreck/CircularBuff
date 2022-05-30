@@ -61,7 +61,7 @@ public class CircularBuffer<T> : IEnumerable, IEnumerable<T>
 
         try
         {
-            Array.Copy(_arr, 0, array, arrayIndex, _size);
+            Array.Copy(_arr, 0, array!, arrayIndex, _size);
         }
         catch (ArrayTypeMismatchException ex)
         {
