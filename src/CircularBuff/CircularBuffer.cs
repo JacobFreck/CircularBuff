@@ -21,10 +21,16 @@ public class CircularBuffer<T> : IEnumerable, IEnumerable<T>
     }
 
     public int Count => _size;
+    internal int Start => _start;
+    internal T[] Arr => _arr;
 
     public void Add(T item)
     {
         int nextIndex = (_start + _size) % _arr.Length;
+
+        if (_size == _arr.Length)
+            _start = (_start + 1) % _arr.Length;
+
         _size = Math.Min(_size + 1, _arr.Length);
         _arr[nextIndex] = item;
     }

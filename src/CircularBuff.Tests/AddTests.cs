@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CircularBuff.Tests;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,11 +15,12 @@ public class AddTests : TestBase
     [InlineData(1)]
     [InlineData(3)]
     [InlineData(5)]
+    [InlineData(6)]
     public void AddFull_Enumerate(int size)
     {
         CircularBuffer<int> buffer = new(size);
 
-        foreach (int i in Enumerable.Range(0, size))
+        foreach (int i in 0.To(size - 1))
             buffer.Add(i);
 
         int count = 0;
@@ -28,32 +30,6 @@ public class AddTests : TestBase
             count++;
         }
     }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(3)]
-    [InlineData(5)]
-    [InlineData(6)]
-    public void AddOverflow(int size)
-    {
-        CircularBuffer<int> buffer = new(size);
-
-        foreach (int i in Enumerable.Range(0, size + 1))
-            buffer.Add(i);
-
-        foreach ((int value, int index) in buffer.Select((int i, int index) => (i, index)))
-        {
-            if (index == 0)
-                Assert.Equal(size, value);
-            else
-                Assert.Equal(index, value);
-
-            Logger.WriteLine($"value={value}, index={index}");
-        }
-
-        Assert.Equal(size, buffer.Count);
-    }
-
 
     [Fact]
     public void ZeroAdd_ReturnsExpectedValue()
@@ -70,10 +46,32 @@ public class AddTests : TestBase
     {
         CircularBuffer<int> buffer = new(size);
 
-        if (size > 0)
-            Enumerable.Range(0, size).ToList().ForEach(buffer.Add);
+        foreach (int i in 0.To(size - 1))
+            buffer.Add(i);
 
         Assert.Equal(buffer.Count, size);
+    }
+
+    [Theory]
+    [InlineData(1, 0)]
+    [InlineData(3, 0)]
+    [InlineData(5, 0)]
+    [InlineData(6, 0)]
+    [InlineData(1, 1)]
+    [InlineData(3, 1)]
+    [InlineData(5, 1)]
+    [InlineData(6, 1)]
+    [InlineData(6, 6)]
+    [InlineData(6, 12)]
+    [InlineData(6, 15)]
+    public void AddOverflow_CorrectSequence(int size, int additional)
+    {
+        CircularBuffer<int> buffer = new(size);
+
+        foreach (int i in 0.To(size + additional))
+            buffer.Add(i);
+
+        Assert.Equal((1 + additional).To(size + additional), buffer.Select(x => x));
     }
 }
 
